@@ -1,9 +1,9 @@
 # Google Sheets API Wrapper
 
-Wrapper sencillo pero robusto para conectar Google Sheets con Python usando `gspread` y `pandas`.  
-Ideal para flujos ETL, reporting automático o dashboards que se alimentan de hojas de cálculo.
+Simple yet robust wrapper to connect Google Sheets with Python using `gspread` and `pandas`.  
+Ideal for ETL pipelines, automated reporting, or dashboards that consume spreadsheet data.
 
-## 🛠️ Instalación
+## 🛠️ Installation
 
 ```bash
 pip install -r requirements.txt
