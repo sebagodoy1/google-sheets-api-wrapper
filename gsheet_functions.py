@@ -8,13 +8,13 @@ from typing import Optional, List, Any
 
 class GoogleSheetsFunctions:
     """
-    Wrapper para interactuar con Google Sheets usando credenciales de service account.
+    Wrapper to interact with Google Sheets using service account credentials.
     """
     def __init__(self, credentials_file: str, sheet_name: str):
         """
         Args:
-            credentials_file: Nombre del archivo JSON (debe estar en el mismo directorio)
-            sheet_name: Nombre de la hoja de cálculo en Google Drive
+            credentials_file: Name of the JSON file (must be in the same directory)
+            sheet_name: Name of the spreadsheet in Google Drive
         """
         script_dir = os.path.dirname(os.path.realpath(__file__))
         key_path = os.path.join(script_dir, credentials_file)
@@ -24,11 +24,11 @@ class GoogleSheetsFunctions:
         self.sheet = self.client.open(sheet_name)
 
     def get_worksheet(self, index: int = 0) -> gspread.Worksheet:
-        """Obtiene una hoja de trabajo por índice (0 por defecto)"""
+        """Gets a worksheet by index (0 by default)"""
         return self.sheet.get_worksheet(index)
 
     def clear_sheet(self, worksheet: gspread.Worksheet) -> None:
-        """Limpia todos los datos desde A2 hasta el final de la hoja"""
+        """Clears all data from A2 to the end of the sheet"""
         existing_data = worksheet.get_all_values()
         if not existing_data:
             return
@@ -38,7 +38,7 @@ class GoogleSheetsFunctions:
         worksheet.batch_clear([range_to_clear])
 
     def append_from_last_row(self, worksheet: gspread.Worksheet, df: pd.DataFrame) -> None:
-        """Agrega filas al final de la hoja"""
+        """Appends rows to the end of the sheet"""
         existing_rows = len(worksheet.get_all_values())
         data_to_append = df.values.tolist()
         worksheet.insert_rows(data_to_append, row=existing_rows + 1, value_input_option=ValueInputOption.user_entered)
@@ -46,8 +46,8 @@ class GoogleSheetsFunctions:
     def update_worksheet(self, worksheet: gspread.Worksheet, df: pd.DataFrame,
                          clear_existing: bool = False, update_cell: str = 'J2') -> None:
         """
-        Actualiza la hoja: si clear_existing=True reemplaza todo desde A2,
-        sino agrega al final. Además escribe fecha de actualización.
+        Updates the sheet: if clear_existing=True it replaces everything from A2,
+        otherwise it appends to the end. Also writes the update date.
         """
         data_to_insert = df.values.tolist()
         if clear_existing:
@@ -62,4 +62,4 @@ class GoogleSheetsFunctions:
             worksheet.update(f'A{start_row}', data_to_insert, value_input_option='USER_ENTERED')
 
         now = datetime.now().strftime("%d/%m/%Y")
-        worksheet.update(update_cell, [[f"Actualizado a la fecha {now}"]])
+        worksheet.update(update_cell, [[f"Updated on {now}"]])
